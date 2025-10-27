@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Abrigo de Animais</title>
+    <link rel="stylesheet" href="{% static 'petguard/styles.css' %}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>PetGuard</h1>
+            <button onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <section>
+        <form id="animalForm">
+            <input type="text" class="especie" name="especie" placeholder="Espécie" required>
+            <input type="text" class="raca" name="raca" placeholder="Raça" required>
+            <input type="number" class="idade" name="idade" placeholder="Idade" required>
+            <select class="status" name="status" required>
+                <option value="Disponível">Disponível</option>
+                <option value="Em tratamento">Em tratamento</option>
+                <option value="Adotado">Adotado</option>
+            </select>
+            <button type="submit">Adicionar Animal</button>
+        </form>
+    </section>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Espécie</th>
+                <th>Raça</th>
+                <th>Idade</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="animalList"></tbody>
+    </table>
+
+    <button id="doacoesBtn" onclick="openDoacoesPage()">Doações</button>
+
+    <script src="{% static 'petguard/scripts.js' %}"></script>
+</body>
+</html>
