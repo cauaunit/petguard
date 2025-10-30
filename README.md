@@ -17,6 +17,3 @@ Admin: django-jazzmin
 
 <img width="250" height="250" alt="1710173183065" src="https://github.com/user-attachments/assets/884e24b8-9ee2-4e02-b860-5efcc8a04703" />
 
-<img width="250" height="200" alt="MySQL-Logo" src="https://github.com/user-attachments/assets/2ed701ab-8599-425e-baa5-fcd71d027dc6" />
-
-<img width="150" height="150" alt="4844483" src="https://github.com/user-attachments/assets/4b6b1c4c-b4ec-4543-9a98-a85e5fedf63d" />
