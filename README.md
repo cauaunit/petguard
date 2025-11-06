@@ -47,7 +47,7 @@ e caso de linux ou macOS:
 
 source venv/bin/activate
 
-git clone -b caua https://github.com/cauaunit/petguard.git
+git clone -b main https://github.com/cauaunit/petguard.git
 
 no mesmo nível do manage.py(arquivo do backend), rodar:
 
