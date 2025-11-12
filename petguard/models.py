@@ -28,6 +28,7 @@ class Animal(models.Model):
     meses = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=30,choices=STATUS_CHOICES, default="disponivel")
     observacoes = models.TextField(blank=True, null=True)
+    foto = models.ImageField(upload_to='animais/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.apelido} ({self.especie})"

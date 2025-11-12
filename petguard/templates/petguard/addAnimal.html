@@ -7,6 +7,37 @@
   <title>PetGuard - Cadastro de Animal</title>
   <link rel="stylesheet" href="{% static 'petguard/styles.css' %}">
   <link rel="stylesheet" href="{% static 'petguard/addAnimal.css' %}">
+  <style>
+    .foto-animal-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .foto-preview {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      transition: 0.3s;
+    }
+    .foto-preview:hover {
+      opacity: 0.8;
+      border-color: #4CAF50;
+    }
+    .foto-label {
+      font-size: 0.95rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    #foto {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -31,11 +62,17 @@
 
   <div class="container">
     <div class="card">
-      <form method="POST" action="">
+      <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="animal-info">
-          <div class="animal-foto">
-            <img src="{% static 'petguard/icone-gato.png' %}" alt="Foto do animal">
+          <div class="foto-animal-container" onclick="document.getElementById('foto').click()">
+            {% if animal and animal.foto %}
+              <img id="fotoPreview" src="{{ animal.foto.url }}" alt="Foto do animal" class="foto-preview">
+            {% else %}
+              <img id="fotoPreview" src="{% static 'petguard/icone-gato.png' %}" alt="Foto do animal" class="foto-preview">
+            {% endif %}
+            <label for="foto" class="foto-label">📸 Clique na imagem para trocar</label>
+            <input type="file" name="foto" id="foto" accept="image/*" onchange="previewFoto(event)">
           </div>
 
           <div class="dados">
@@ -111,7 +148,6 @@
   </div>
 
   <script>
-    // Mostrar campo "nova raça" se selecionado
     function handleRacaChange(select) {
       const novaRacaDiv = document.getElementById("novaRacaDiv");
       if (select.value === "nova") {
@@ -122,11 +158,9 @@
       }
     }
 
-    // Atualiza raças dinamicamente conforme a espécie selecionada
     document.getElementById("especieSelect").addEventListener("change", function() {
       const especieId = this.value;
       const racaSelect = document.getElementById("racaSelect");
-
       racaSelect.innerHTML = '<option value="">Carregando...</option>';
 
       if (especieId) {
@@ -140,7 +174,6 @@
               option.textContent = raca.nome;
               racaSelect.appendChild(option);
             });
-            // Adiciona novamente a opção de nova raça
             const novaOption = document.createElement("option");
             novaOption.value = "nova";
             novaOption.textContent = "➕ Adicionar nova raça";
@@ -153,6 +186,19 @@
         racaSelect.innerHTML = '<option value="">Selecione uma espécie primeiro...</option>';
       }
     });
+
+    // Preview da imagem escolhida
+    function previewFoto(event) {
+      const fotoPreview = document.getElementById('fotoPreview');
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fotoPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   </script>
 
 </body>

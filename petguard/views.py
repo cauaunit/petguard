@@ -81,6 +81,7 @@ def add_animal(request, id=None):
         nova_raca_nome = request.POST.get('nova_raca')
         status = request.POST.get('status')
         observacoes = request.POST.get('observacoes')
+        foto = request.FILES.get('foto')
 
         especie = get_object_or_404(Especie, id=especie_id)
 
@@ -99,6 +100,8 @@ def add_animal(request, id=None):
             animal.raca = raca
             animal.status = status
             animal.observacoes = observacoes
+            if foto:
+                animal.foto = foto
             animal.save()
         else:
             Animal.objects.create(
@@ -109,6 +112,7 @@ def add_animal(request, id=None):
                 raca=raca,
                 status=status,
                 observacoes=observacoes,
+                foto=foto,
             )
 
         return redirect('index')
