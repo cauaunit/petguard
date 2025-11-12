@@ -1,10 +1,3 @@
-🛠️ *Tecnologias Utilizadas*
-Backend: Python, HTML, Css, Javascript Django, Django REST Framework
-
-Servidor de Aplicação: Django (Python manage.py runserver)
-
-
-Banco de Dados: SQLITE (Teste)
 🐾 PetGuard — Sistema de Gerenciamento de Animais
 
 PetGuard é um sistema web desenvolvido com Django, HTML, CSS e JavaScript, projetado para facilitar o cadastro, controle e acompanhamento de animais.
@@ -38,6 +31,15 @@ Painel administrativo completo para gerenciar espécies, raças e animais com po
 Autenticação: djangorestframework-simplejwt
 
 ------------------------------------------------
+
+🛠️ *Tecnologias Utilizadas*
+Backend: Python, HTML, Css, Javascript Django, Django REST Framework
+
+Servidor de Aplicação: Django (Python manage.py runserver)
+
+
+Banco de Dados: SQLITE (Teste)
+
 Documentação: drf-spectacular
 
 Admin: django-jazzmin
