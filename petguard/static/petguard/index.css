@@ -1,3 +1,4 @@
+/* --- Cabeçalho e logo --- */
 .logo-nome {
     display: flex;
     align-items: center;
@@ -9,91 +10,7 @@
     height: auto;
 }
 
-.barra-pesquisa {
-    display: flex;
-    width: 60%;
-    max-width: 375px;
-    margin: 40px auto;
-    border: 2px solid #ccc;
-    border-radius: 25px;
-    overflow: hidden;
-}
-
-.campo-pesquisa {
-    flex-grow: 1;
-    padding: 15px 20px;
-    border: none;
-    outline: none;
-    font-size: 18px;
-}
-
-.botao-pesquisa {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 25px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    border-radius: 0;
-}
-
-.botao-pesquisa:hover {
-    background-color: #3a853d;
-}
-
-.addBtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 0; 
-    margin-left: 1300px;
-}
-.addBtn:hover {
-    background-color: #45a049;
-}
-
-
-section {
-    padding: 1.5rem;
-    margin: 1rem;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
-    padding: 0.8rem;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
+/* --- Botão flutuante "Adicionar" --- */
 #addAnimalbtn {
     position: fixed;
     bottom: 20px;
@@ -110,20 +27,16 @@ button:hover {
 }
 
 #addAnimalbtn:hover {
-    background-color: #45a049;
+    background-color: #43A047;
 }
 
-.acoes {
-    display: flex;
-    gap: 8px;
-}
-
+/* --- Botões gerais --- */
 .btn {
     background-color: #4CAF50;
     color: white !important;
     padding: 6px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     cursor: pointer;
     font-size: 14px;
@@ -140,4 +53,139 @@ button:hover {
 
 .btn-danger:hover {
     background-color: #c62828;
+}
+
+/* --- Container dos filtros --- */
+.filtros-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    background: #fff;
+    padding: 18px 30px;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    max-width: 950px;
+    margin: 30px auto;
+}
+
+/* --- Campos e selects --- */
+.filtros-container input,
+.filtros-container select {
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    padding: 10px 18px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.filtros-container input {
+    width: 240px;
+}
+
+.filtros-container select {
+    width: 180px;
+}
+
+.filtros-container input:focus,
+.filtros-container select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.3);
+}
+
+.filtros-container input::placeholder {
+    padding-left: 22px;
+    background: url('https://cdn-icons-png.flaticon.com/512/54/54481.png') no-repeat 3px center;
+    background-size: 16px;
+}
+
+.status-filtros {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.status-bolinha {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.status-bolinha.disponivel { background-color: #4CAF50; }
+.status-bolinha.em_tratamento { background-color: #FBC02D; }
+.status-bolinha.adotado { background-color: #E53935; }
+
+.status-bolinha:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+.status-bolinha.selecionado {
+    outline: 3px solid #4CAF50;
+    transform: scale(1.1);
+}
+section {
+    padding: 1.5rem;
+    margin: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f9f9f9;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    width: 90%;
+    margin: 30px auto;
+}
+
+.animal-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.animal-card:hover {
+    transform: translateY(-5px);
+}
+
+.animal-foto {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.animal-info {
+    margin-top: 10px;
+}
+
+.animal-info h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
 }

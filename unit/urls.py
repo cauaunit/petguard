@@ -6,10 +6,9 @@ from petguard import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/animais/', views.listar_animais, name='listar_animais'),
+    path('api/animais/', views.index, name='listar_animais'),
     path('add-animal/', views.add_animal, name='add_animal'),
     path("add_animal/<int:id>/", views.add_animal, name="editar_animal"),
-    path("listar_animais/", views.listar_animais, name="listar_animais"),
     path('racas/<int:especie_id>/', views.racas_por_especie, name='racas_por_especie'),
     path('', include('petguard.urls')),
 ]

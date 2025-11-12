@@ -27,8 +27,40 @@ def logout_view(request):
 
 @login_required(login_url="login")
 def index(request):
+    query = request.GET.get('q', '')
+    especie_id = request.GET.get('especie')
+    raca_id = request.GET.get('raca')
+    status = request.GET.get('status')
+
     animais = Animal.objects.all()
-    return render(request, "petguard/index.html", {"animais": animais})
+
+    # Filtro por apelido
+    if query:
+        animais = animais.filter(apelido__icontains=query)
+
+    # Filtro por espécie
+    if especie_id and especie_id.lower() != 'todas as espécies':
+        animais = animais.filter(especie_id=especie_id)
+
+    # Filtro por raça (corrigido)
+    if raca_id and raca_id.lower() != 'todas as raças':
+        try:
+            animais = animais.filter(raca_id=int(raca_id))
+        except ValueError:
+            pass  # caso venha algo inválido
+
+    # Filtro por status
+    if status and status.lower() != 'todos':
+        animais = animais.filter(status=status)
+
+    context = {
+        'animais': animais,
+        'especies': Especie.objects.all(),
+        'racas': Raca.objects.all(),
+        'is_admin': request.user.is_superuser,
+    }
+
+    return render(request, 'petguard/index.html', context)
 
 
 @login_required(login_url="login")
@@ -52,7 +84,6 @@ def add_animal(request, id=None):
 
         especie = get_object_or_404(Especie, id=especie_id)
 
-        # Se for criada uma nova raça
         if nova_raca_nome:
             raca, _ = Raca.objects.get_or_create(nome=nova_raca_nome, especie=especie)
         elif raca_id:
@@ -93,38 +124,16 @@ def add_animal(request, id=None):
         'racas': racas,
     })
 
+
 def racas_por_especie(request, especie_id):
     racas = Raca.objects.filter(especie_id=especie_id).values('id', 'nome')
     return JsonResponse(list(racas), safe=False)
+
 
 @login_required(login_url="login")
 def detalhes(request, id):
     animal = get_object_or_404(Animal, id=id)
     return render(request, "petguard/detalhes.html", {"animal": animal})
-
-
-@login_required(login_url="login")
-def listar_animais(request):
-    animais = Animal.objects.all().values("id", "especie__nome", "raca", "anos", "meses", "status")
-    lista = []
-    for a in animais:
-        idade_formatada = ""
-        if a["anos"] > 0:
-            idade_formatada += f'{a["anos"]} ano(s)'
-        if a["meses"] > 0:
-            idade_formatada += f' e {a["meses"]} mês(es)'
-        if not idade_formatada:
-            idade_formatada = "0 mês(es)"
-        lista.append(
-            {
-                "id": a["id"],
-                "especie": a["especie__nome"],
-                "raca": a["raca"],
-                "idade": idade_formatada,
-                "status": a["status"],
-            }
-        )
-    return JsonResponse(lista, safe=False)
 
 
 @require_POST

@@ -2,149 +2,225 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetGuard</title>
-    <link rel="stylesheet" href="{% static 'petguard/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'petguard/index.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetGuard</title>
+  <link rel="stylesheet" href="{% static 'petguard/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'petguard/index.css' %}">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo-nome">
-                <img src="{% static 'petguard/petlogobranco.png' %}" class="logo" id="logo">
-            </div>
-            <div class="profile-container">
-                <img src="{% static 'petguard/iconepng.png' %}" alt="Perfil" class="profile-icon" id="profileIcon">
-                <div class="profile-menu" id="profileMenu">
-                    <p class="profile-name">Olá, {{ user }}!</p>
-                    <a href="#">Meu Perfil</a>
-                    {% if is_admin %}
-                        <a href="http://127.0.0.1:8000/admin/">Cadastrar Usuário</a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}">Sair</a>
-                </div>
-            </div>
-        </div>
-    </header>
+<header>
+  <div class="header-content">
+    <div class="logo-nome">
+      <img src="{% static 'petguard/petlogobranco.png' %}" class="logo" id="logo">
+    </div>
+    <div class="profile-container">
+      <img src="{% static 'petguard/iconepng.png' %}" alt="Perfil" class="profile-icon" id="profileIcon">
+      <div class="profile-menu" id="profileMenu">
+        <p class="profile-name">Olá, {{ user }}!</p>
+        <a href="#">Meu Perfil</a>
+        {% if is_admin %}
+          <a href="http://127.0.0.1:8000/admin/">Cadastrar Usuário</a>
+        {% endif %}
+        <a href="{% url 'logout' %}">Sair</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <section>
-        <form id="animalForm" class="barra-pesquisa">
-            <input type="text" placeholder="Pesquisar..." name="q" class="campo-pesquisa">
-            <button type="submit" class="botao-pesquisa">Buscar</button>
-            <button type="button" id="addAnimalbtn" class="addBtn">Adicionar</button>
+<section>
+  <div class="filtros-container">
+    <input type="text" id="buscaInput" placeholder="🔍 Pesquisar por apelido" />
+
+    <select id="filtroEspecie">
+      <option value="">Todas as espécies</option>
+      {% for especie in especies %}
+      <option value="{{ especie.nome }}">{{ especie.nome }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="raca" id="filtroRaca">
+        <option value="">Todas as raças</option>
+        {% for raca in racas %}
+        <option value="{{ raca.id }}">{{ raca.nome }}</option>
+        {% endfor %}
+    </select>
+
+    <div class="status-filtros" role="radiogroup" aria-label="Filtrar por status">
+      <button type="button" class="status-bolinha disponivel" data-status="disponivel" title="Disponível"></button>
+      <button type="button" class="status-bolinha em_tratamento" data-status="em_tratamento" title="Em tratamento"></button>
+      <button type="button" class="status-bolinha adotado" data-status="adotado" title="Adotado"></button>
+      <input type="hidden" id="statusFiltro" name="status" value="">
+    </div>
+
+    <button type="button" id="addAnimalbtn" class="addBtn">Adicionar</button>
+  </div>
+</section>
+
+<table id="tabelaAnimais">
+  <thead>
+    <tr>
+      <th>Apelido</th>
+      <th>Espécie</th>
+      <th>Raça</th>
+      <th>Idade</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for animal in animais %}
+    <tr 
+       data-especie="{{ animal.especie.id }}" 
+       data-raca="{{ animal.raca.id }}" 
+       data-status="{{ animal.status }}">
+      <td>{{ animal.apelido }}</td>
+      <td>{{ animal.especie }}</td>
+      <td>{{ animal.raca }}</td>
+      <td>
+        {% if animal.anos > 0 %}{{ animal.anos }} ano(s){% endif %}
+        {% if animal.meses > 0 %}{% if animal.anos > 0 %} e {% endif %}{{ animal.meses }} mês(es){% endif %}
+        {% if animal.anos == 0 and animal.meses == 0 %}0 mês(es){% endif %}
+      </td>
+      <td>{{ animal.get_status_display }}</td>
+      <td>
+        <a href="{% url 'editar_animal' animal.id %}" class="btn btn-success">Editar</a>
+        <form action="{% url 'excluir_animal' animal.id %}" method="post" class="delete-form" style="display:inline;">
+          {% csrf_token %}
+          <button type="button" class="btn btn-danger delete-btn">Excluir</button>
         </form>
-    </section>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6" style="text-align:center;">Nenhum animal cadastrado.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Apelido</th>
-                <th>Espécie</th>
-                <th>Raça</th>
-                <th>Idade</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for animal in animais %}
-            <tr>
-                <td>{{ animal.apelido }}</td>
-                <td>{{ animal.especie }}</td>
-                <td>{{ animal.raca }}</td>
-                <td>
-                    {% if animal.anos > 0 %}
-                        {{ animal.anos }} ano(s)
-                    {% endif %}
-                    {% if animal.meses > 0 %}
-                        {% if animal.anos > 0 %} e {% endif %}
-                        {{ animal.meses }} mês(es)
-                    {% endif %}
-                    {% if animal.anos == 0 and animal.meses == 0 %}
-                        0 mês(es)
-                    {% endif %}
-                </td>
-                <td>{{ animal.status }}</td>
-                <td>
-                    <a href="{% url 'editar_animal' animal.id %}" class="btn btn-success">Editar</a>
-                    <form action="{% url 'excluir_animal' animal.id %}" method="post" class="delete-form" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="button" class="btn btn-danger delete-btn">
-                            Excluir
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" style="text-align:center;">Nenhum animal cadastrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <script src="{% static 'petguard/animais.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // ✅ Faz o botão "Adicionar" voltar a funcionar
-    const addAnimalBtn = document.getElementById("addAnimalbtn");
-    if (addAnimalBtn) {
-        addAnimalBtn.addEventListener("click", function() {
-            window.location.href = "{% url 'add_animal' %}";
-        });
-    }
-
-    // ✅ Confirmação de exclusão com SweetAlert
-    document.querySelectorAll(".delete-form .delete-btn").forEach(button => {
-        button.addEventListener("click", function(e) {
-            e.preventDefault();
-
-            const form = this.closest("form");
-            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
-
-            Swal.fire({
-                title: "Tem certeza?",
-                text: "Você deseja excluir este animal?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sim, excluir",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(form.action, {
-                        method: "POST",
-                        headers: {
-                            "X-CSRFToken": csrfToken,
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: "Excluído!",
-                                text: "O animal foi removido com sucesso.",
-                                icon: "success",
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire("Erro!", data.error || "Falha ao excluir o animal.", "error");
-                        }
-                    })
-                    .catch(() => {
-                        Swal.fire("Erro!", "Não foi possível excluir o animal.", "error");
-                    });
-                }
-            });
-        });
+document.addEventListener("DOMContentLoaded", () => {
+  const addAnimalBtn = document.getElementById("addAnimalbtn");
+  if (addAnimalBtn) {
+    addAnimalBtn.addEventListener("click", () => {
+      window.location.href = "{% url 'add_animal' %}";
     });
+  }
+
+  const buscaInput = document.getElementById("buscaInput");
+  const filtroEspecie = document.getElementById("filtroEspecie");
+  const filtroRaca = document.getElementById("filtroRaca");
+  const statusButtons = document.querySelectorAll(".status-filtros .status-bolinha");
+  const statusInput = document.getElementById("statusFiltro");
+  const linhas = document.querySelectorAll("#tabelaAnimais tbody tr");
+
+  function normalizarTexto(valor) {
+    return valor
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function normalizarStatus(valor) {
+    return normalizarTexto(valor).replace(/\s+/g, "_");
+  }
+
+  function aplicarFiltros() {
+    const termo = normalizarTexto(buscaInput.value);
+    const especie = normalizarTexto(filtroEspecie.value);
+    const raca = filtroRaca.value;
+    const status = normalizarStatus(statusInput.value);
+
+    linhas.forEach(linha => {
+      const apelido = normalizarTexto(linha.cells[0].textContent);
+      const linhaEspecie = normalizarTexto(linha.dataset.especie || "");
+      const linhaRaca = linha.dataset.raca;
+      const linhaStatus = normalizarStatus(linha.dataset.status || "");
+
+      const matchApelido = !termo || apelido.includes(termo);
+      const matchEspecie = !especie || linhaEspecie === especie;
+      const matchRaca = !raca || linhaRaca === raca;
+      const matchStatus = !status || linhaStatus === status;
+
+      linha.style.display = (matchApelido && matchEspecie && matchRaca && matchStatus) ? "" : "none";
+    });
+  }
+
+  [buscaInput, filtroEspecie, filtroRaca].forEach(el => {
+    el.addEventListener("input", aplicarFiltros);
+    el.addEventListener("change", aplicarFiltros);
+  });
+
+  statusButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const value = btn.dataset.status;
+      const ativo = btn.classList.contains("selecionado");
+
+      statusButtons.forEach(b => {
+        b.classList.remove("selecionado");
+        b.setAttribute("aria-pressed", "false");
+      });
+
+      if (!ativo) {
+        btn.classList.add("selecionado");
+        btn.setAttribute("aria-pressed", "true");
+        statusInput.value = value;
+      } else {
+        statusInput.value = "";
+      }
+
+      aplicarFiltros();
+    });
+  });
+
+  aplicarFiltros();
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const deleteButtons = document.querySelectorAll(".delete-btn");
+
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const form = this.closest(".delete-form");
+
+      Swal.fire({
+        title: "Tem certeza?",
+        text: "Essa ação não poderá ser desfeita!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sim, excluir!",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(form.action, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value,
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire("Excluído!", "O animal foi removido com sucesso.", "success");
+              form.closest("tr").remove();
+            } else {
+              Swal.fire("Erro!", "Não foi possível excluir o animal.", "error");
+            }
+          })
+          .catch(() => Swal.fire("Erro!", "Falha na comunicação com o servidor.", "error"));
+        }
+      });
+    });
+  });
 });
 </script>
 

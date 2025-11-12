@@ -93,7 +93,7 @@
             <label>Status:</label>
             <select id="status" name="status" class="form-select" style="width: 200px;">
               <option value="disponivel" {% if animal.status == "disponivel" %}selected{% endif %}>Disponível</option>
-              <option value="em_tratamento" {% if animal.status == "em_tratamento" %}selected{% endif %}>Em tratamento</option>
+              <option value="em tratamento" {% if animal.status == "em tratamento" %}selected{% endif %}>Em tratamento</option>
               <option value="adotado" {% if animal.status == "adotado" %}selected{% endif %}>Adotado</option>
             </select>
           </div>

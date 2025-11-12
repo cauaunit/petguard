@@ -1,4 +1,3 @@
-# petguard/models.py
 from django.db import models
 
 class Especie(models.Model):
@@ -17,12 +16,17 @@ class Raca(models.Model):
 
 
 class Animal(models.Model):
+    STATUS_CHOICES = [
+        ('disponivel', 'Disponível'),
+        ('em_tratamento', 'Em tratamento'),
+        ('adotado', 'Adotado'),
+    ]
     apelido = models.CharField(max_length=100)
     especie = models.ForeignKey(Especie, on_delete=models.CASCADE)
     raca = models.ForeignKey(Raca, on_delete=models.CASCADE)
     anos = models.PositiveIntegerField(default=0)
     meses = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=30, default="disponivel")
+    status = models.CharField(max_length=30,choices=STATUS_CHOICES, default="disponivel")
     observacoes = models.TextField(blank=True, null=True)
 
     def __str__(self):
