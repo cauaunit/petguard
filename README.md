@@ -33,7 +33,7 @@ Autenticação: djangorestframework-simplejwt
 ------------------------------------------------
 
 🛠️ *Tecnologias Utilizadas*
-Backend: Python, HTML, Css, Javascript Django, Django REST Framework
+Backend: Python, HTML, Css, Javascript, Django, Django REST Framework
 
 Servidor de Aplicação: Django (Python manage.py runserver)
 
