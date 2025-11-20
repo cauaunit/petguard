@@ -15,4 +15,5 @@ urlpatterns = [
     path('animal/<int:animal_id>/', views.veterinario_view, name='veterinario'),
     path('medicacao/<int:pk>/deletar/', views.deletar_medicacao, name='deletar_medicacao'),
     path('editar_medicacao/<int:medicacao_id>/', views.editar_medicacao, name='editar_medicacao'),
+    path('recover_passoword/', views.recover_password, name='recuperar_senha')
 ]

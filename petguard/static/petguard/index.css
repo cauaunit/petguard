@@ -127,7 +127,7 @@
 }
 
 .status-bolinha.selecionado {
-    outline: 3px solid #4CAF50;
+    outline: 3px solid #adabab;
     transform: scale(1.1);
 }
 section {

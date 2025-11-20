@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseForbidden
@@ -7,6 +8,9 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from .models import Animal, Especie, Raca, Medicacao
 from django.contrib.auth import update_session_auth_hash
+from .forms import PasswordRecoveryForm
+import random
+import string
 
 
 def login_view(request):
@@ -244,3 +248,33 @@ def editar_medicacao(request, medicacao_id):
         "medicacao": medicacao,
         "animal": animal
     })
+
+
+def recover_password(request):
+    if request.method == "POST":
+        form = PasswordRecoveryForm(request.POST)
+        
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            cpf = form.cleaned_data["cpf"]
+
+            try:
+                user = User.objects.get(username=username, last_name=cpf)
+            except User.DoesNotExist:
+                messages.error(request, "Usuário ou CPF incorretos.")
+                return render(request, "petguard/recover_password.html", {"form": form})
+
+            # Gerar senha temporária
+            temp_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+            # Definir a nova senha
+            user.set_password(temp_password)
+            user.save()
+
+            messages.success(request, f"Sua nova senha temporária é: {temp_password}")
+            return render(request, "petguard/recover_password.html", {"form": PasswordRecoveryForm()})
+
+    else:
+        form = PasswordRecoveryForm()
+
+    return render(request, "petguard/recover_password.html", {"form": form})
