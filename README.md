@@ -67,7 +67,7 @@ Git
 (TUDO A BAIXO PRECISA SER DIGITADO NO TERMINAL)
 
 
-git clone -b main https://github.com/cauaunit/petguard.git
+git clone -b main https://github.com/cdantass/petguard.git
 
 no mesmo nível do manage.py(arquivo do backend), rodar:
 
